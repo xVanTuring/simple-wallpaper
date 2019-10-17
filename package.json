@@ -1,0 +1,13 @@
+{
+  "name": "simple-wallpaper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "xVan TUring",
+  "license": "GNU",
+  "dependencies": {
+    "fs-extra": "^8.1.0",
+    "request": "^2.88.0"
+  },
+  "bin": "index.js"
+}
