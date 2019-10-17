@@ -13,7 +13,7 @@ const ResoMap = {
 const defaultImageStoragePath = path.join(os.homedir(), "Pictures", "simple-wallpaper")
 
 args.option("tags", 'Tag to send eg. "nature,night"', "")
-    .option("reso", 'Resolution to download eg. 1920x1080 or 1K，2K, 4K', "")
+    .option("reso", 'Resolution to download eg. 1920x1080 or 1K，2K, 4K', "1K")
     .option("path", "Path to store image", defaultImageStoragePath)
 const flags = args.parse(process.argv)
 
