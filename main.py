@@ -2,6 +2,16 @@ import argparse
 import pathlib
 
 import requests
+import os
+import random
+
+
+def working_dir():
+    """
+    TODO provide as better solution for image storage and local image metadata storage.
+    """
+    return pathlib.Path("./")
+
 
 def build_url(tags: str = "random", resolution: str = "1K") -> str:
     """
@@ -36,25 +46,36 @@ def download_url(image_url: str) -> str:
     """
     response = requests.get(image_url)
     id = response.headers.get("x-imgix-id")
-    img_path = pathlib.Path(f"./{id}.jpeg")
+    img_path = pathlib.Path(working_dir(), f"{id}.jpeg")
     img_path.write_bytes(response.content)
     return str(img_path.absolute())
 
 
-parser = argparse.ArgumentParser(
-    prog="Simple Wallpaper",
-    description="A Program changes wallaper",
-    epilog="xVanTuring@2024",
-)
-parser.add_argument("-t", "--tags", required=False, default="random")
-parser.add_argument("-r", "--resolution", default="1K")
+def random_choice_from_local():
+    cwd = working_dir()
+    images = list(filter(lambda name: name.endswith(".jpeg"), os.listdir(cwd)))
+    image_path = str(pathlib.Path(cwd, random.choice(images)).absolute())
+    return image_path
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        prog="Simple Wallpaper",
+        description="A Program changes wallaper",
+        epilog="xVanTuring@2024",
+    )
+    parser.add_argument("-t", "--tags", required=False, default="random")
+    parser.add_argument("-r", "--resolution", default="1K")
+    parser.add_argument("-l", "--local", action="store_true")
+
     args = parser.parse_args()
-    image_url = build_url(args.tags, args.resolution)
-    image_path = download_url(image_url)
-    change_wallpaper(image_path)
+    if args.local:
+        image_path = random_choice_from_local()
+        change_wallpaper(image_path)
+    else:
+        image_url = build_url(args.tags, args.resolution)
+        image_path = download_url(image_url)
+        change_wallpaper(image_path)
 
 
 def change_wallpaper(abs_path: str):
