@@ -3,26 +3,24 @@ import pathlib
 
 import requests
 
-RESO_MAP = {"1K": "1920x1080", "2K": "2560x1440", "4K": "3840x2160"}
-
-
-def build_url(tags: str, resolution: str):
+def build_url(tags: str = "random", resolution: str = "1K") -> str:
     """
-    build unsplash url from tags and resolution
+    Build Unsplash URL from tags and resolution.
+
+    Args:
+        tags (str): The tags to search for in the image. If set to "random", a random image will be returned. Default is "random".
+        resolution (str): The desired resolution of the image. Valid options are "1K", "2K", and "4K". Default is "1K".
+
+    Returns:
+        str: The constructed URL for the image based on the provided tags and resolution.
     """
+    RESO_MAP = {"1K": "1920x1080", "2K": "2560x1440", "4K": "3840x2160"}
     base_url = "https://source.unsplash.com"
-    url_array = [base_url]
-    if tags == "random":
-        url_array.append("random")
-    else:
-        url_array.append("featured")
+    url_array = [base_url, "random" if tags == "random" else "featured"]
     if resolution != "":
-        if resolution in RESO_MAP:
-            url_array.append(RESO_MAP[resolution])
-        else:
-            url_array.append(resolution)
+        url_array.append(RESO_MAP.get(resolution, resolution))
     if tags != "random":
-        url_array.append("?" + ",".join(map(lambda x: x.strip(), tags.split(","))))
+        url_array.append("?" + ",".join(map(str.strip, tags.split(","))))
     return "/".join(url_array)
 
 
