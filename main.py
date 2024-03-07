@@ -26,12 +26,18 @@ def build_url(tags: str = "random", resolution: str = "1K") -> str:
 
 def download_url(image_url: str) -> str:
     """
-    download image from url and return absolute path str
+    Download an image from a given URL and return the absolute path of the downloaded image.
+
+    Args:
+        image_url (str): The URL of the image to be downloaded.
+
+    Returns:
+        str: The absolute path of the downloaded image.
     """
     response = requests.get(image_url)
-    id = response.headers["x-imgix-id"]
+    id = response.headers.get("x-imgix-id")
     img_path = pathlib.Path(f"./{id}.jpeg")
-    open(img_path, "wb").write(response.content)
+    img_path.write_bytes(response.content)
     return str(img_path.absolute())
 
 
